@@ -1,0 +1,18 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/log/nginx/access.log
+  tags: ["access"]
+  fields:
+    log_type: nginx
+- type: log
+  enabled: true
+  paths:
+    - /var/log/nginx/error.log
+  tags: ["error"]
+  fields:
+    log_type: nginx
+
+output.logstash:
+  hosts: ["192.168.1.4:5044"]
