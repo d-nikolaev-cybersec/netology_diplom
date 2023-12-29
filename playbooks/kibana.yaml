@@ -1,0 +1,31 @@
+- name: Добавление репозитория
+  hosts: kibana
+  become: yes
+
+  tasks:
+    - name: Добавление ключа репозитория
+      apt_key:
+        url: "http://elasticrepo.serveradmin.ru/elastic.asc"
+        state: present
+
+    - name: Добавление записи репозитория
+      apt_repository:
+        repo: "deb http://elasticrepo.serveradmin.ru"
+        state: present
+        filename: "bullseye main"
+        update_cache: yes
+
+- name: Установка Kibana из Ansible Galaxy
+  hosts: kibana
+  become: yes
+  collections:
+    - geerlingguy.kibana
+
+  roles:
+    - role: geerlingguy.kibana
+      vars:
+        kibana_elasticsearch_url: "http://192.168.1.4:9200"
+        kibana_server_port: 5601
+        kibana_server_host: "0.0.0.0"
+
+

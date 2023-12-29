@@ -1,0 +1,40 @@
+#WEB-SERVER
+
+---
+- hosts: "nginx"
+  become: true
+  tasks:
+  - name: Копирование пакета на удаленный сервер
+    copy:
+     src: /home/braineater/ansible/nginx_1.22.1-1~jammy_amd64.deb
+     dest: /tmp/nginx_1.22.1-1~jammy_amd64.deb
+
+  - name: Установка пакета с помощью dpkg
+    command: dpkg -i /tmp/nginx_1.22.1-1~jammy_amd64.deb
+  - name: сreate directory
+    file:
+      path=/var/www
+      mode=0755
+      owner=root
+      group=root
+      state=directory
+
+  - name: Запустить nginx и настроить его для автозапуска при загрузке
+    service:
+      name: nginx
+      state: started
+      enabled: yes
+  - name: "Copy our lending"
+    ansible.builtin.copy:
+      src: "cfg/index.html"
+      dest: "/usr/share/nginx/html"
+      owner: "root"
+      group: "root"
+      mode: "0644"
+  - name: "Copy our virtual host config to"
+    ansible.builtin.copy:
+      src: "cfg/diplom.conf"
+      dest: "/etc/nginx/conf.d/"
+      owner: "root"
+      group: "root"
+      mode: "0644"

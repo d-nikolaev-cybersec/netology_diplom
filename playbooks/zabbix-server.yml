@@ -1,0 +1,133 @@
+
+---
+- name: Обновление пакетов apt
+  hosts: zabbix
+  become: yes
+  tasks:
+  - name: Обновить пакеты apt
+    apt:
+      update_cache: yes
+- name: Установка postgresql из роли
+  hosts: zabbix
+  become: yes
+  roles:
+    - role: geerlingguy.postgresql
+      become: yes
+      postgresql_hba_entries:
+        - { type: local, database: all, user: postgres, auth_method: trust }
+        - { type: local, database: all, user: all, auth_method: trust }
+        - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: trust }
+        - { type: host, database: all, user: all, address: '::1/128', auth_method: md5 }
+
+- name: Установка Zabbix Server из коллекции
+  hosts: zabbix
+  become: true
+  collections:
+    - community.zabbix
+  roles:
+    - role: community.zabbix.zabbix_server
+      zabbix_server_database: pgsql
+      zabbix_server_database_long: postgresql
+      zabbix_server_dbport: 5432
+      zabbix_server_dbhost: 127.0.0.1
+      zabbix_server_dbhost_run_install: false
+      zabbix_server_dbuser: zabbix
+      zabbix_server_dbpassword: test
+      zabbix_server_privileged_host: '%'
+      zabbix_server_pgsql_login_host: 127.0.0.1
+      zabbix_server_pgsql_login_user: postgres
+      zabbix_server_pgsql_login_password: postgres
+      zabbix_server_pgsql_login_port: 5432
+- name: Установка php-fpm
+  hosts: zabbix
+  become: yes
+  tasks:
+    - name: Обновить пакеты apt
+      apt:
+        update_cache: yes
+
+    - name: Установить php-fpm
+      apt:
+        name: php-fpm
+        state: present
+
+    - name: Запустить php-fpm и настроить его для автозапуска при загрузке
+      service:
+        name: php8.1-fpm
+        state: started
+        enabled: yes
+- name: Установка apache
+  hosts: zabbix
+  become: yes
+  tasks:
+    - name: Обновить пакеты apt
+      apt:
+        update_cache: yes
+
+    - name: Установить apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Запустить apache2 и настроить его для автозапуска при загрузке
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+    - name: Включение Rewrite Module
+      command: a2enmod rewrite
+- name: Установка Zabbix web из коллекции
+  hosts: zabbix
+  become: true
+  collections:
+    - community.zabbix
+  roles:
+    - role: community.zabbix.zabbix_web
+      zabbix_server_dbuser: zabbix
+      zabbix_server_dbpassword: test
+- name: устрановка Zabbix agent2 для сервера
+  hosts: zabbix
+  become: true
+  collections:
+    - community.zabbix
+  roles:
+    - role: community.zabbix.zabbix_agent
+      zabbix_agent_server: 127.0.0.1
+
+- name: устрановка Zabbix agent2 для kibana
+  hosts: kibana
+  become: true
+  collections:
+    - community.zabbix
+  roles:
+    - role: community.zabbix.zabbix_agent
+      zabbix_agent_server: 192.168.1.21
+- name: Установка zabbix-agent с помощью dpkg
+  hosts: elastik, nginx
+  become: yes
+
+  tasks:
+    - name: Копирование пакета на удаленный сервер
+      copy:
+        src: /home/braineater/ansible/zabbix-agent2_6.4.0-1+ubuntu22.04_amd64.deb
+        dest: /tmp/zabbix-agent2_6.4.0-1+ubuntu22.04_amd64.deb
+      register: copy_result
+
+    - name: Установка zabbix-agent2 с помощью dpkg
+      command: dpkg -i /tmp/zabbix-agent2_6.4.0-1+ubuntu22.04_amd64.deb
+    - name: Замена строк в конфиге
+      replace:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^Server=.*'
+        replace: 'Server=192.168.1.29'
+    - name: Замена строк в конфиге
+      replace:
+        path: /etc/zabbix/zabbix_agent2.conf
+        regexp: '^ServerActive=.*'
+        replace: '#ServerActive=192.168.1.29'
+
+    - name: Start Zabbix Agent2 service
+      service:
+        name: zabbix-agent2
+        state: started
+        enabled: yes

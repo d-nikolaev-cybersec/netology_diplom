@@ -1,0 +1,88 @@
+- name: Установка elasticsearch с помощью dpkg
+  hosts: elastik
+  become: yes
+
+  tasks:
+  - name: Копирование пакета на удаленный сервер
+    copy:
+      src: /home/braineater/ansible/elasticsearch-8.9.1-amd64.deb
+      dest: /tmp/elasticsearch-8.9.1-amd64.deb
+    register: copy_result
+
+  - name: Установка пакета с помощью dpkg
+    command: dpkg -i /tmp/elasticsearch-8.9.1-amd64.deb
+    
+  - name: Копирование конфига на удаленный сервер
+    copy:
+      src: /home/braineater/ansible/cfg/elasticsearch.yml
+      dest: /etc/elasticsearch/
+    register: copy_result
+
+  - name: Stop Elasticsearch service
+    systemd:
+      name: elasticsearch
+      state: stopped
+
+  - name: Start Elasticsearch service
+    systemd:
+      name: elasticsearch
+      state: started
+
+
+- name: Установка logstash с помощью dpkg
+  hosts: elastik
+  become: yes
+
+  tasks:
+    - name: Копирование пакета на удаленный сервер
+      copy:
+        src: /home/braineater/ansible/logstash-8.9.2-amd64.deb
+        dest: /tmp/logstash-8.9.2-amd64.deb
+      register: copy_result
+
+    - name: Установка пакета с помощью dpkg
+      command: dpkg -i /tmp/logstash-8.9.2-amd64.deb
+
+    - name: Копирование конфига на удаленный сервер
+      copy:
+        src: /home/braineater/ansible/cfg/logstash.conf
+        dest: /etc/logstash/conf.d
+      register: copy_result
+    - name: Stop logstash service
+      systemd:
+        name: logstash
+        state: stopped
+
+    - name: Start logstash service
+      systemd:
+        name: logstash
+        state: started
+
+- name: Установка filebeat с помощью dpkg
+  hosts: nginx
+  become: yes
+
+  tasks:
+    - name: Копирование пакета на удаленный сервер
+      copy:
+        src: /home/braineater/ansible/filebeat-8.9.2-amd64.deb
+        dest: /tmp/filebeat-8.9.2-amd64.deb
+      register: copy_result
+
+    - name: Установка пакета с помощью dpkg
+      command: dpkg -i /tmp/filebeat-8.9.2-amd64.deb
+
+    - name: Копирование конфига на удаленный сервер
+      copy:
+        src: /home/braineater/ansible/cfg/filebeat.yml
+        dest: /etc/filebeat/filebeat.yml
+      register: copy_result
+    - name: Stop filebeat service
+      systemd:
+        name: filebeat
+        state: stopped
+
+    - name: Start filebeat service
+      systemd:
+        name: filebeat
+        state: started
