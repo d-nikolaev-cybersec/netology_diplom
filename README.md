@@ -24,6 +24,16 @@
 
 Скриншоты:
 ![ВМ](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/62843753-da7b-4b67-b3c6-3f5a54cf0d96)
+![Балансер](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/d9cd5f07-35cd-48f2-a5e0-aa54972eba11)
+![Сеть](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/881a6f70-1f07-4f67-8efc-ef7792fb46e8)
+![Роутер](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/0d0d6b34-3d0f-4c33-b4c5-227d419c8a93)
+![Группа бэков](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/ea2af7cb-1db2-47d1-b508-973a9d9aefdc)
+![Целевая группа](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/b0f5adb5-c849-452b-842e-f5a588426051)
+![Группа безопасности](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/cb153fca-1c18-4621-9e5c-37fecd14b6d7)
+
+
+
+
 
 
 
