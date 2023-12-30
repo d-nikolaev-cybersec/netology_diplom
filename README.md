@@ -37,6 +37,8 @@ Kibana - http://51.250.31.81:5601
 ![Группа бэков](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/ea2af7cb-1db2-47d1-b508-973a9d9aefdc)
 ![Целевая группа](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/b0f5adb5-c849-452b-842e-f5a588426051)
 ![Группа безопасности](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/cb153fca-1c18-4621-9e5c-37fecd14b6d7)
+![Снимки](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/d5c1a615-fab2-4e57-894c-20e5a36e8a76)
+
 
 
 
