@@ -23,6 +23,7 @@
 Все дашборды можно увидеть в заббиксе, по предоставленным кредам.
 
 Скриншоты:
+![ВМ](https://github.com/d-nikolaev-cybersec/netology_diplom/assets/107998187/62843753-da7b-4b67-b3c6-3f5a54cf0d96)
 
 
 
